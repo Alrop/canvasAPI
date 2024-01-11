@@ -1,13 +1,15 @@
-<<<<<<< HEAD
-let canvas = document.getElementById("gameBoard");
-let ctx = canvas.getContext("2d");
-=======
 /** @format */
 const canvas = document.getElementById('gameBoard');
 const ctx = canvas.getContext('2d');
->>>>>>> 721270376e5a785a193c48b0d098eab09c159d38
-// ALEKSIN RIVIT
+// Movement keys (W, A, S, D)
+let up = false,
+    right = false,
+    left = false,
+    down = false;
 
+
+// ALEKSIN RIVIT
+/*
 const map = [
 	['#', '#', '#', '#', '#', '#'],
 	['#', ' ', ' ', ' ', ' ', '#'],
@@ -60,6 +62,11 @@ class Character {
 		ctx.fill();
 		ctx.closePath();
 	}
+
+
+
+
+    
 	update() {
 		this.draw();
 		this.position.x += this.velocity.x;
@@ -93,7 +100,7 @@ function collisionDetection({ unit, wall }) {
 function animate() {
 	requestAnimationFrame(animate);
 	// Puhdista vanha ruutu ennen uuden piirtämistä
-	ctx.clearRect(0, 0, canvas.width, canvas.height);
+//	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	// Piirrä level.arrayn koordinaatit käyttäen Wall classin draw()
 	level.forEach((square) => {
@@ -112,10 +119,8 @@ function animate() {
 	});
 	player.update();
 }
-
-<<<<<<< HEAD
-
-
+animate()
+*/
 
 
 
@@ -128,23 +133,52 @@ function animate() {
 // Tämä toimii testikuvana 
 // let char = 'photos/testPhoto.png';
 
+
 function startGame() {
-    ctx.fillStyle = "blue";
-    ctx.fillRect(150, 150, 50, 50);
-    myGamePiece = new component(50, 50, "blue", 10, 120);
+    // Luodaan uusi pelihahmo
+    character = new component(50, 50, "red", 0, 320);
+}
+// Luodaan hahmo peliareenalle
+function component(width, height, color, x, y) {
+    this.width = width;
+    this.height = height;
+    this.x = x;
+    this.y = y;
+    // Määritellään neliö
+    ctx.fillStyle = color;
+    ctx.fillRect(this.x, this.y, this.width, this.height);
+    // UPDATE sijainnin määrittelyyn
+    this.update = function() {    
+        ctx.fillStyle = color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+    }
+    // Uuden sijainnin/tyylin määrittely tehdään täällä
+    this.newPos = function() {
+        this.x += this.speedX;
+        this.y += this.speedY;        
+    }
+    // CLEAR ettei jää vanaa perään    
+    this.clear = function(){
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
 }
 
-// MOVEMENT
-// Näitä muokattava oman näköiseksi
-document.addEventListener("keydown", function (event) {
-    keystate_Player[event.key] = true;
-})
-document.addEventListener("keyup", function (event) {
-    keyState_Player[event.key] = false;
-});
 
-// MOVEMENT KEYS "W A S D"
-=======
-animate();
-// TAIJAN RIVIT
->>>>>>> 721270376e5a785a193c48b0d098eab09c159d38
+// PUSH KEY
+document.addEventListener("keydown", press);
+function press(key) {
+    console.log(key.keyCode + " Mitä painettiin")
+    character.speedX = 0;
+    character.speedY = 0;    
+    if (key.keyCode == 65) { // A    left
+        character.speedX = -5; } 
+    if (key.keyCode == 68) {  // D    right
+        character.speedX = 5; }
+    if (key.keyCode == 87) { // W    up
+        character.speedY = -5; }
+    if (key.keyCode == 83) {  // S    down
+        character.speedY = 5; }
+    character.newPos();
+    character.clear();
+    character.update();
+}
