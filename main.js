@@ -9,10 +9,24 @@ let up = false,
 
 
 // ALEKSIN RIVIT
-/*
 const map = [
 	['#', '#', '#', '#', '#', '#'],
+	['#', ' ', ' ', ' ', ' ', '#', ' ', '#', '#'],
+	['#', ' ', '#', '#', ' ', '#'],
 	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', '#', '#', '#', '#', '#'],
+	['#', '#', '#', '#', '#', '#'],
+	['#', ' ', ' ', ' ', ' ', '#', ' ', '#', '#'],
+	['#', ' ', '#', '#', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', '#', '#', '#', '#', '#'],
+	['#', '#', '#', '#', '#', '#'],
+	['#', ' ', ' ', ' ', ' ', '#', ' ', '#', '#'],
+	['#', ' ', '#', '#', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', '#', '#', '#', '#', '#'],
+	['#', '#', '#', '#', '#', '#'],
+	['#', ' ', ' ', ' ', ' ', '#', ' ', '#', '#'],
 	['#', ' ', '#', '#', ' ', '#'],
 	['#', ' ', ' ', ' ', ' ', '#'],
 	['#', '#', '#', '#', '#', '#'],
@@ -22,7 +36,7 @@ const level = [];
 class Wall {
 	constructor({ position }) {
 		this.position = position;
-		this.width = 50;
+		this.width = 30;
 		this.height = this.width;
 	}
 	draw() {
@@ -40,8 +54,8 @@ map.forEach((row, i) => {
 			level.push(
 				new Wall({
 					position: {
-						x: 50 * j,
-						y: 50 * i,
+						x: 30 * j,
+						y: 30 * i,
 					},
 				})
 			);
@@ -49,58 +63,51 @@ map.forEach((row, i) => {
 	});
 });
 
-class Character {
-	constructor({ position, velocity }) {
-		this.position = position;
-		this.velocity = velocity;
-		this.radius = 18;
+// Määritellään pallo
+class Component {
+	constructor(width, height) {
+		this.width = width;
+		this.height = height;
+		this.color = "red";
+		this.radius = 12;
+		this.speedX = 0
+		this.speedY = 0
 	}
+	// Piiretään pallo
 	draw() {
 		ctx.beginPath();
-		ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2);
-		ctx.fillStyle = 'orange';
+		ctx.arc(this.width, this.height, this.radius, 0, Math.PI * 2);
+		ctx.fillStyle = this.color;
 		ctx.fill();
 		ctx.closePath();
 	}
-
-
-
-
-    
+	// upataan pallo ja nopeus sille
 	update() {
 		this.draw();
-		this.position.x += this.velocity.x;
-		this.position.y += this.velocity.y;
+		this.width += this.speedX;
+		this.height += this.speedY;
 	}
 }
-
-const player = new Character({
-	position: {
-		x: 50 * 1.5,
-		y: 50 * 1.5,
-	},
-	velocity: {
-		x: 1,
-		y: 0,
-	},
-});
+ // Luodaan uusi pelihahmo
+ character = new Component(350, 150);
 
 // Palauttaa True jos hahmo osuisi seinään seuraavassa ruudussa
 function collisionDetection({ unit, wall }) {
 	return (
-		unit.position.y - unit.radius + unit.velocity.y <=
+		unit.height - unit.radius + unit.speedY <=
 			wall.position.y + wall.height &&
-		unit.position.x + unit.radius + unit.velocity.x >= wall.position.x &&
-		unit.position.y + unit.radius + unit.velocity.y >= wall.position.y &&
-		unit.position.x - unit.radius + unit.velocity.x <=
+		unit.width + unit.radius + unit.speedX >= wall.position.x &&
+		unit.height + unit.radius + unit.speedY >= wall.position.y &&
+		unit.width - unit.radius + unit.speedX <=
 			wall.position.x + wall.width
 	);
+	
 }
 
 function animate() {
 	requestAnimationFrame(animate);
 	// Puhdista vanha ruutu ennen uuden piirtämistä
-//	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 	// Piirrä level.arrayn koordinaatit käyttäen Wall classin draw()
 	level.forEach((square) => {
@@ -108,19 +115,19 @@ function animate() {
 		// Jos minkään seinän collisionDetection palauttaa True, pysäytä hahmo
 		if (
 			collisionDetection({
-				unit: player,
+				unit: character,
 				wall: square,
 			})
 		) {
 			console.log('Collision detected');
-			player.velocity.x = 0;
-			player.velocity.y = 0;
+			character.speedX = 0;
+			character.speedY = 0;
 		}
 	});
-	player.update();
+	character.update();
 }
-animate()
-*/
+
+
 
 
 
@@ -133,35 +140,6 @@ animate()
 // Tämä toimii testikuvana 
 // let char = 'photos/testPhoto.png';
 
-
-function startGame() {
-    // Luodaan uusi pelihahmo
-    character = new component(50, 50, "red", 0, 320);
-}
-// Luodaan hahmo peliareenalle
-function component(width, height, color, x, y) {
-    this.width = width;
-    this.height = height;
-    this.x = x;
-    this.y = y;
-    // Määritellään neliö
-    ctx.fillStyle = color;
-    ctx.fillRect(this.x, this.y, this.width, this.height);
-    // UPDATE sijainnin määrittelyyn
-    this.update = function() {    
-        ctx.fillStyle = color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-    }
-    // Uuden sijainnin/tyylin määrittely tehdään täällä
-    this.newPos = function() {
-        this.x += this.speedX;
-        this.y += this.speedY;        
-    }
-    // CLEAR ettei jää vanaa perään    
-    this.clear = function(){
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-}
 
 
 // PUSH KEY
@@ -178,7 +156,13 @@ function press(key) {
         character.speedY = -5; }
     if (key.keyCode == 83) {  // S    down
         character.speedY = 5; }
-    character.newPos();
-    character.clear();
-    character.update();
 }
+
+// RELEASE KEY
+document.addEventListener("keyup", release);
+function release(key) {
+	character.speedX = 0;
+    character.speedY = 0;   
+}
+
+animate()
