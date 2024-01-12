@@ -4,10 +4,13 @@ const canvas = document.getElementById('gameBoard');
 const ctx = canvas.getContext('2d');
 // HERO
 let heroImage = new Image();
-heroImage.src = 'photos/static_monkey.png';
+heroImage.src = 'photos/static_right.png';
 heroImage.onload = function() {
 	ctx.drawImage(heroImage, 0, 0);
 };
+// HERO MOVEMENT 
+const rightMove = ['photos/static_right.png', 'photos/right1.png', 'photos/right2.png', 'photos/right3.png', 'photos/right4.png'];
+const leftMove = ['photos/left.png', 'photos/left1.png', 'photos/left2.png', 'photos/left3.png', 'photos/left4.png'];
 
 // ALEKSIN RIVIT
 // prettier-ignore
@@ -73,22 +76,11 @@ class Component {
 	constructor(width, height) {
 		this.width = width;
 		this.height = height;
-<<<<<<< HEAD
-	//	this.color = "red";
-		this.radius = 20;	// Tämä on oltava että osaa törmätä seiniin
-		this.speedX = 0
-		this.speedY = 0
-=======
-		this.color = 'red';
-		this.radius = 18;
+		this.square = 20;	// Tämä on oltava että osaa törmätä seiniin
 		this.speedX = 0;
 		this.speedY = 0;
-		this.x = 12;
-		this.y = this.x;
->>>>>>> acb10ce4c0d65a5e3aa03073d1506b8f1e8ded4e
 	}
 	draw() {
-<<<<<<< HEAD
 	// Piiretään pallo
 		/*
 		ctx.beginPath();
@@ -98,25 +90,21 @@ class Component {
 		ctx.closePath();
 		*/
 	// Piirretään kuva
-		ctx.drawImage(heroImage, this.width, this.height)
+		ctx.drawImage(heroImage, this.width, this.height);
+	// Tehdään testineliö 
+		ctx.beginPath();
+		ctx.rect(30, 130, 80, 80);
+		// Testi että nähdään onko neliö tehty
+		// Tarkoitus siis oli jos tuon kuvan lisää neliö sisään? mut on varmaan turha?
+		ctx.lineWidth = 7;
+		ctx.strokddeStyle = 'black';
+		ctx.stroke();
 
 
 
 
-
-=======
-		// ctx.beginPath();
-		// ctx.arc(this.width, this.height, this.radius, 0, Math.PI * 2);
-		// ctx.fillStyle = this.color;
-		// ctx.fill();
-		// ctx.closePath();
-
-		// Piirrä neliö
-		ctx.fillStyle = this.color;
-		ctx.fillRect(this.width, this.height, this.x, this.x);
->>>>>>> acb10ce4c0d65a5e3aa03073d1506b8f1e8ded4e
 	}
-	// upataan pallo ja nopeus sille
+	// Updatetaan hero ja nopeus sille
 	update() {
 		this.draw();
 		this.width += this.speedX;
@@ -196,7 +184,7 @@ function press(key) {
 		character.speedX = 2;
 	}
 	if (key.keyCode == 87) {
-		// W    up
+		// W    up	
 		character.speedY = -2;
 	}
 	if (key.keyCode == 83) {
