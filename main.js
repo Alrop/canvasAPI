@@ -9,9 +9,10 @@ let up = false,
 
 
 // ALEKSIN RIVIT
+// H: 17 riviä	W: 25
 const map = [
 	['#', '#', '#', '#', '#', '#'],
-	['#', ' ', ' ', ' ', ' ', '#', ' ', '#', '#'],
+	['#', ' ', ' ', ' ', ' ', '#', ' ', '#', '#','#', ' ', ' ', ' ', ' ', '#', ' ', '#', '#','#', ' ', ' ', ' ', ' ', ' ', '#'],
 	['#', ' ', '#', '#', ' ', '#'],
 	['#', ' ', ' ', ' ', ' ', '#'],
 	['#', '#', '#', '#', '#', '#'],
@@ -54,8 +55,8 @@ map.forEach((row, i) => {
 			level.push(
 				new Wall({
 					position: {
-						x: 30 * j,
-						y: 30 * i,
+						x: 30 * j -30,
+						y: 30 * i -30,
 					},
 				})
 			);
@@ -69,7 +70,7 @@ class Component {
 		this.width = width;
 		this.height = height;
 		this.color = "red";
-		this.radius = 12;
+		this.radius = 18;
 		this.speedX = 0
 		this.speedY = 0
 	}
@@ -94,14 +95,12 @@ class Component {
 // Palauttaa True jos hahmo osuisi seinään seuraavassa ruudussa
 function collisionDetection({ unit, wall }) {
 	return (
-		unit.height - unit.radius + unit.speedY <=
-			wall.position.y + wall.height &&
+		unit.height - unit.radius + unit.speedY <= wall.position.y + wall.height &&
 		unit.width + unit.radius + unit.speedX >= wall.position.x &&
 		unit.height + unit.radius + unit.speedY >= wall.position.y &&
-		unit.width - unit.radius + unit.speedX <=
-			wall.position.x + wall.width
+		unit.width - unit.radius + unit.speedX <= wall.position.x + wall.width
 	);
-	
+
 }
 
 function animate() {
@@ -127,13 +126,6 @@ function animate() {
 	character.update();
 }
 
-
-
-
-
-
-
-
 // TAIJAN RIVIT
 /* W: 800px    H: 600px
 */
@@ -149,13 +141,13 @@ function press(key) {
     character.speedX = 0;
     character.speedY = 0;    
     if (key.keyCode == 65) { // A    left
-        character.speedX = -5; } 
+        character.speedX = -2; } 
     if (key.keyCode == 68) {  // D    right
-        character.speedX = 5; }
+        character.speedX = 2; }
     if (key.keyCode == 87) { // W    up
-        character.speedY = -5; }
+        character.speedY = -2; }
     if (key.keyCode == 83) {  // S    down
-        character.speedY = 5; }
+        character.speedY = 2; }
 }
 
 // RELEASE KEY
