@@ -3,10 +3,9 @@ const canvas = document.getElementById('gameBoard');
 const ctx = canvas.getContext('2d');
 // Movement keys (W, A, S, D)
 let up = false,
-    right = false,
-    left = false,
-    down = false;
-
+	right = false,
+	left = false,
+	down = false;
 
 // ALEKSIN RIVIT
 // H: 17 riviä	W: 25
@@ -20,17 +19,19 @@ const map = [
 	['#', ' ', ' ', ' ', ' ', '#', ' ', '#', '#'],
 	['#', ' ', '#', '#', ' ', '#'],
 	['#', ' ', ' ', ' ', ' ', '#'],
-	['#', '#', '#', '#', '#', '#'],
-	['#', '#', '#', '#', '#', '#'],
-	['#', ' ', ' ', ' ', ' ', '#', ' ', '#', '#'],
-	['#', ' ', '#', '#', ' ', '#'],
 	['#', ' ', ' ', ' ', ' ', '#'],
-	['#', '#', '#', '#', '#', '#'],
-	['#', '#', '#', '#', '#', '#'],
-	['#', ' ', ' ', ' ', ' ', '#', ' ', '#', '#'],
-	['#', ' ', '#', '#', ' ', '#'],
 	['#', ' ', ' ', ' ', ' ', '#'],
-	['#', '#', '#', '#', '#', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', '#'],
+	['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'],
+	['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'],
 ];
 const level = [];
 
@@ -89,8 +90,8 @@ class Component {
 		this.height += this.speedY;
 	}
 }
- // Luodaan uusi pelihahmo
- character = new Component(350, 150);
+// Luodaan uusi pelihahmo
+character = new Component(350, 150);
 
 // Palauttaa True jos hahmo osuisi seinään seuraavassa ruudussa
 function collisionDetection({ unit, wall }) {
@@ -100,7 +101,6 @@ function collisionDetection({ unit, wall }) {
 		unit.height + unit.radius + unit.speedY >= wall.position.y &&
 		unit.width - unit.radius + unit.speedX <= wall.position.x + wall.width
 	);
-
 }
 
 function animate() {
@@ -128,14 +128,12 @@ function animate() {
 
 // TAIJAN RIVIT
 /* W: 800px    H: 600px
-*/
-// Tämä toimii testikuvana 
+ */
+// Tämä toimii testikuvana
 // let char = 'photos/testPhoto.png';
 
-
-
 // PUSH KEY
-document.addEventListener("keydown", press);
+document.addEventListener('keydown', press);
 function press(key) {
     console.log(key.keyCode + " Mitä painettiin")
     character.speedX = 0;
@@ -151,10 +149,10 @@ function press(key) {
 }
 
 // RELEASE KEY
-document.addEventListener("keyup", release);
+document.addEventListener('keyup', release);
 function release(key) {
 	character.speedX = 0;
-    character.speedY = 0;   
+	character.speedY = 0;
 }
 
-animate()
+animate();
