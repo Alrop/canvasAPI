@@ -10,6 +10,7 @@ let up = false,
 
 // ALEKSIN RIVIT
 // prettier-ignore
+// H: 21 riviä	W: 27
 const map = [
 	['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'],
 	['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'],
@@ -72,7 +73,7 @@ class Component {
 		this.width = width;
 		this.height = height;
 		this.color = 'red';
-		this.radius = 12;
+		this.radius = 18;
 		this.speedX = 0;
 		this.speedY = 0;
 		this.x = 12;
@@ -98,7 +99,7 @@ class Component {
 	}
 }
 // Luodaan uusi pelihahmo
-character = new Component(400, 150);
+character = new Component(30, 30); // lähtö sijainti
 
 // Palauttaa True jos hahmo osuisi seinään seuraavassa ruudussa
 function collisionDetection({ unit, wall }) {
@@ -163,19 +164,19 @@ function press(key) {
 	character.speedY = 0;
 	if (key.keyCode == 65) {
 		// A    left
-		character.speedX = -5;
+		character.speedX = -2;
 	}
 	if (key.keyCode == 68) {
 		// D    right
-		character.speedX = 5;
+		character.speedX = 2;
 	}
 	if (key.keyCode == 87) {
 		// W    up
-		character.speedY = -5;
+		character.speedY = -2;
 	}
 	if (key.keyCode == 83) {
 		// S    down
-		character.speedY = 5;
+		character.speedY = 2;
 	}
 }
 
