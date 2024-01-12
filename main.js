@@ -1,11 +1,12 @@
 /** @format */
 const canvas = document.getElementById('gameBoard');
 const ctx = canvas.getContext('2d');
-// Movement keys (W, A, S, D)
-let up = false,
-	right = false,
-	left = false,
-	down = false;
+// HERO
+let heroImage = new Image();
+heroImage.src = 'photos/static_monkey.png';
+heroImage.onload = function() {
+	ctx.drawImage(heroImage, 0, 0);
+};
 
 // ALEKSIN RIVIT
 // H: 21 riviä	W: 27
@@ -70,18 +71,27 @@ class Component {
 	constructor(width, height) {
 		this.width = width;
 		this.height = height;
-		this.color = "red";
-		this.radius = 18;
+	//	this.color = "red";
+		this.radius = 20;	// Tämä on oltava että osaa törmätä seiniin
 		this.speedX = 0
 		this.speedY = 0
 	}
-	// Piiretään pallo
 	draw() {
+	// Piiretään pallo
+		/*
 		ctx.beginPath();
 		ctx.arc(this.width, this.height, this.radius, 0, Math.PI * 2);
 		ctx.fillStyle = this.color;
 		ctx.fill();
 		ctx.closePath();
+		*/
+	// Piirretään kuva
+		ctx.drawImage(heroImage, this.width, this.height)
+
+
+
+
+
 	}
 	// upataan pallo ja nopeus sille
 	update() {
