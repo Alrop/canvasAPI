@@ -26,6 +26,12 @@ heroImage.src = 'photos/static_right.png';
 heroImage.onload = function () {
 	ctx.drawImage(heroImage, 0, 0);
 };
+// BANANA
+let bananaImage = new Image();
+bananaImage.src = 'photos/banana.png';
+bananaImage.onload = function () {
+	ctx.drawImage(bananaImage, 0, 0);
+};
 
 // ALEKSIN RIVIT
 // prettier-ignore
@@ -87,7 +93,7 @@ map.forEach((row, i) => {
 });
 
 // Määritellään hahmo
-class Component {
+class Hero {
 	constructor(width, height) {
 		this.width = width;
 		this.height = height;
@@ -99,6 +105,8 @@ class Component {
 	}
 	draw() {
 		ctx.drawImage(heroImage, this.width, this.height, this.x, this.y);
+		// Tällä saadaan banaani ruutuun 
+	//	ctx.drawImage(bananaImage, 200, 200, 50, 50)	
 	}
 	update() {
 		this.draw();
@@ -107,7 +115,27 @@ class Component {
 	}
 }
 
-character = new Component(30, 30); // lähtö sijainti
+// Määritellään banaani lähtöruuduille
+class BananaFruit {
+	constructor(width, height) {
+		this.width = width;
+		this.height = height;
+		// Banaanin koon määrittely || Normikoko 50x50
+		this.y = 50;
+		this.x = 50;
+	}
+	draw() {
+		ctx.drawImage(bananaImage, this.width, this.height, this.x, this.y);
+	}
+	update() {
+		this.width = Math.round(2 + (Math.random() * (canvas.width - 64)));
+		this.height = Math.round(32 + (Math.random() * (canvas.height - 64)));
+		this.draw();
+	}
+}
+
+character = new Hero(30, 30); // lähtö sijainti
+banana = new BananaFruit(200, 200);	// Banaanin lähtösijainti
 
 // Palauttaa True jos hahmo osuisi seinään seuraavassa ruudussa
 function collisionDetection({ unit, wall }) {
@@ -155,7 +183,22 @@ function animate() {
 		}
 	});
 	character.update();
+// BANAANIN PIIRTÄMINEN
+	// Banaanin ja apinan törmäys
+	// Jos hahmo osuu vasen/ylä seinään, banaani alkaa sätimään, eli pitäisi laskea taas noita sijainteja
+	// Collisioneita ei myöskään määritelty
+	if (
+		(character.x <= (banana.x + banana.width) && 
+		banana.x <= (character.x + character.width) &&
+		character.y <= (banana.y + banana.height) &&
+		banana.y <= (character.y + character.height)) 
+		=== false) {
+			banana.update();
+		} 
+	banana.draw();
+// -------------------------------------------------------------
 }
+
 
 function movement() {
 	let currentIMG = ''
@@ -241,6 +284,7 @@ document.addEventListener('keyup', release);
 function release(key) {
 	keyPress = 0;
 	movement();
+
 }
 
 animate();
