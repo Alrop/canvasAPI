@@ -28,9 +28,15 @@ heroImage.onload = function () {
 };
 // BANANA
 let bananaImage = new Image();
-bananaImage.src = 'photos/banana.png';
-bananaImage.onload = function () {
-	ctx.drawImage(bananaImage, 0, 0);
+	bananaImage.src = 'photos/banana.png';
+	bananaImage.onload = function () {
+		ctx.drawImage(bananaImage, 0, 0);
+};
+// CITRUS
+let lemonImage = new Image();
+	lemonImage.src = 'photos/lemon.png'
+	lemonImage.onload = function () {
+		ctx.drawImage(lemonImage, 0, 0)
 };
 
 // ALEKSIN RIVIT
@@ -105,8 +111,6 @@ class Hero {
 	}
 	draw() {
 		ctx.drawImage(heroImage, this.width, this.height, this.x, this.y);
-		// Tällä saadaan banaani ruutuun 
-	//	ctx.drawImage(bananaImage, 200, 200, 50, 50)	
 	}
 	update() {
 		this.draw();
@@ -127,15 +131,38 @@ class BananaFruit {
 	draw() {
 		ctx.drawImage(bananaImage, this.width, this.height, this.x, this.y);
 	}
-	update() {
+	caught () {
 		this.width = Math.round(2 + (Math.random() * (canvas.width - 64)));
 		this.height = Math.round(32 + (Math.random() * (canvas.height - 64)));
 		this.draw();
 	}
 }
 
+// Määritellään sitruuna jossain vaiheessa kentälle
+class LemonFruit {
+	constructor() {
+		this.width = Math.round(2 + (Math.random() * (canvas.width - 64)));
+		this.height = Math.round(32 + (Math.random() * (canvas.height - 64)));
+		// Situunan koon määrittely || Normikoko 50x50
+		this.y = 50;
+		this.x = 50;
+	}
+	draw() {
+		ctx.drawImage(lemonImage, this.width, this.height, this.x, this.y);
+	}
+	throw() {
+		// Ei ole testattu toimiiko viel
+		this.width = Math.round(2 + (Math.random() * (canvas.width - 64)));
+		this.height = Math.round(32 + (Math.random() * (canvas.height - 64)));
+		for (let i = 0; i < 5; i++) {
+			this.draw()
+		}
+	}
+}
+
 character = new Hero(30, 30); // lähtö sijainti
 banana = new BananaFruit(200, 200);	// Banaanin lähtösijainti
+lemon = new LemonFruit(); 	// Sitruunoiden heitto randomiin paikkaan
 
 // Palauttaa True jos hahmo osuisi seinään seuraavassa ruudussa
 function collisionDetection({ unit, wall }) {
@@ -193,10 +220,14 @@ function animate() {
 		character.y <= (banana.y + banana.height) &&
 		banana.y <= (character.y + character.height)) 
 		=== false) {
-			banana.update();
+			banana.caught();
 		} 
 	banana.draw();
-// -------------------------------------------------------------
+// Ja tänne se sitruuna mukaan esim kun eka bansku otettu, heittää randomisti x määrän sitruunoita kentille
+/*
+		
+*/
+
 }
 
 
@@ -251,6 +282,8 @@ function movement() {
 		ctx.drawImage(heroImage, 0, 0);
 	};
 };
+
+// Liikkeet lyhyemmällä viiveellä, tsekkaa release funktio
 // PUSH KEY
 document.addEventListener('keydown', press);
 function press(key) {
@@ -284,7 +317,6 @@ document.addEventListener('keyup', release);
 function release(key) {
 	keyPress = 0;
 	movement();
-
 }
 
 animate();
