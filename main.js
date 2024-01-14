@@ -151,10 +151,9 @@ class LemonFruit {
 		ctx.drawImage(lemonImage, this.width, this.height, this.x, this.y);
 	}
 	throw() {
-		// Ei ole testattu toimiiko viel
-		this.width = Math.round(2 + (Math.random() * (canvas.width - 64)));
-		this.height = Math.round(32 + (Math.random() * (canvas.height - 64)));
 		for (let i = 0; i < 5; i++) {
+			this.width = Math.round(2 + (Math.random() * (canvas.width - 64)));
+			this.height = Math.round(32 + (Math.random() * (canvas.height - 64)));
 			this.draw()
 		}
 	}
@@ -225,7 +224,7 @@ function animate() {
 	banana.draw();
 // Ja tänne se sitruuna mukaan esim kun eka bansku otettu, heittää randomisti x määrän sitruunoita kentille
 /*
-		
+					lemon.throw();
 */
 
 }
