@@ -101,8 +101,6 @@ class Component {
 		ctx.stroke();
 
 
-
-
 	}
 	// Updatetaan hero ja nopeus sille
 	update() {
