@@ -212,6 +212,11 @@ function animate() {
 			collisionDetection({
 				unit: character,
 				wall: square,
+				// Banaanin ja sitruunan nimet lisätty tähän mut ei viety CollisionDetection
+				/*
+				points: banana,
+				endGame: lemon,
+				*/
 			})
 		) {
 			console.log('Collision detected');
