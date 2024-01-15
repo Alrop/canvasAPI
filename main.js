@@ -20,31 +20,26 @@ const leftMove = [
 let keyPress = 0;
 let i = 0;
 let faceDir = 'right';
-// New Imaget, Saiskohan yhdistettyä yhteen käskyyn? 
-// HERO
-let heroImage = new Image();
-heroImage.src = 'photos/static_right.png';
-heroImage.onload = function () {
-	ctx.drawImage(heroImage, 0, 0);
-};
+// New Imaget, Saiskohan yhdistettyä yhteen käskyyn?
+
 // BANANA
 let bananaImage = new Image();
-	bananaImage.src = 'photos/banana.png';
-	bananaImage.onload = function () {
-		ctx.drawImage(bananaImage, 0, 0);
+bananaImage.src = 'photos/banana.png';
+bananaImage.onload = function () {
+	ctx.drawImage(bananaImage, 0, 0);
 };
 // CITRUS
 let lemonImage = new Image();
-	lemonImage.src = 'photos/lemon.png'
-	lemonImage.onload = function () {
-		ctx.drawImage(lemonImage, 0, 0)
+lemonImage.src = 'photos/lemon.png';
+lemonImage.onload = function () {
+	ctx.drawImage(lemonImage, 0, 0);
 };
 // ROCK COLLISION
-let rockCollision = new Image();
-	rockCollision.src = 'photos/rock.png'
-	rockCollision.onload = function () {
-		ctx.drawImage(rockCollision, 0, 0)
-	}
+let rockImage = new Image();
+rockImage.src = 'photos/rock.png';
+rockImage.onload = function () {
+	ctx.drawImage(rockImage, 0, 0);
+};
 
 // ALEKSIN RIVIT
 // prettier-ignore
@@ -73,6 +68,7 @@ const map = [
 	['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'],
 	['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#']
 ];
+
 const level = [];
 
 class Wall {
@@ -82,12 +78,13 @@ class Wall {
 		this.height = this.width;
 	}
 	draw() {
-	// Vaihdettu suoraan niin että seinät on kiviä
-	/*
-	ctx.fillStyle = 'blue';
-	ctx.fillRect(this.position.x, this.position.y, this.width, this.height);
-	*/
-	ctx.drawImage(rockCollision, this.position.x, this.position.y, this.width, this.height);
+		ctx.drawImage(
+			rockImage,
+			this.position.x,
+			this.position.y,
+			this.width,
+			this.height
+		);
 	}
 }
 
@@ -124,6 +121,7 @@ class Hero {
 		ctx.drawImage(heroImage, this.width, this.height, this.x, this.y);
 	}
 	update() {
+		movement();
 		this.draw();
 		this.width += this.speedX;
 		this.height += this.speedY;
@@ -142,9 +140,9 @@ class BananaFruit {
 	draw() {
 		ctx.drawImage(bananaImage, this.width, this.height);
 	}
-	caught () {
-		this.width = Math.round(2 + (Math.random() * (canvas.width - 64)));
-		this.height = Math.round(32 + (Math.random() * (canvas.height - 64)));
+	caught() {
+		this.width = Math.round(2 + Math.random() * (canvas.width - 64));
+		this.height = Math.round(32 + Math.random() * (canvas.height - 64));
 		this.draw();
 	}
 }
@@ -152,8 +150,8 @@ class BananaFruit {
 // Määritellään sitruuna jossain vaiheessa kentälle
 class LemonFruit {
 	constructor() {
-		this.width = Math.round(2 + (Math.random() * (canvas.width - 64)));
-		this.height = Math.round(32 + (Math.random() * (canvas.height - 64)));
+		this.width = Math.round(2 + Math.random() * (canvas.width - 64));
+		this.height = Math.round(32 + Math.random() * (canvas.height - 64));
 		// Situunan koon määrittely || Normikoko 50x50
 		this.y = 50;
 		this.x = 50;
@@ -162,61 +160,63 @@ class LemonFruit {
 		ctx.drawImage(lemonImage, this.width, this.height, this.x, this.y);
 	}
 	throw() {
-		for (let i = 0; i < 5; i++) {
-			this.width = Math.round(2 + (Math.random() * (canvas.width - 64)));
-			this.height = Math.round(32 + (Math.random() * (canvas.height - 64)));
-			this.draw()
-		}
+		this.width = Math.round(2 + Math.random() * (canvas.width - 64));
+		this.height = Math.round(32 + Math.random() * (canvas.height - 64));
+		this.draw();
 	}
 }
 // Toimisko ilman omaa nimeä (pelkkä new ....)
 character = new Hero(15, 20); // lähtö sijainti
-banana = new BananaFruit(220, 200);	// Banaanin lähtösijainti
-lemon = new LemonFruit(); 	// Sitruunoiden 5x heitto randomiin paikkaan
+banana = new BananaFruit(220, 200); // Banaanin lähtösijainti
 
-// Palauttaa True jos hahmo osuisi seinään seuraavassa ruudussa
-function collisionDetection({ unit, wall }) {
+// Arrayn sitruunat == kuinka monta sitruunaa kentällä
+lemons = [new LemonFruit(), new LemonFruit()];
+
+// TÖRMÄYS LASKINTEN ALKU
+// Palauttaa True jos "unit" törmäisi "object" seuraavassa ruudussa
+function collisionDetectionA({ unit, object }) {
 	return (
 		// Neliön törmäys moottori
 		// Ylä seinä
-		unit.height + unit.speedY <= wall.position.y + wall.height &&
+		unit.height + unit.speedY <= object.position.y + object.height &&
 		// Ala seinä
-		unit.height + unit.y + unit.speedY >= wall.position.y &&
+		unit.height + unit.y + unit.speedY >= object.position.y &&
 		// Oikea seinä
-		unit.width + unit.x + unit.speedX >= wall.position.x &&
+		unit.width + unit.x + unit.speedX >= object.position.x &&
 		// Vasen seinä
-		unit.width + unit.speedX <= wall.position.x + wall.width
-
-		// Ympyrän törmäys moottori
-		// // Ylä seinä
-		// unit.height - unit.radius + unit.speedY <=
-		// 	wall.position.y + wall.height &&
-		// // Ala seinä
-		// unit.height + unit.radius + unit.speedY >= wall.position.y &&
-		// // Oikea seinä
-		// unit.width + unit.radius + unit.speedX >= wall.position.x &&
-		// // Vasen seinä
-		// unit.width - unit.radius + unit.speedX <= wall.position.x + wall.width
+		unit.width + unit.speedX <= object.position.x + object.width
 	);
 }
+// Vaihtoehtoinen törmäys laskin
+function collisionDetectionB({ unit, object }) {
+	return (
+		// Neliön törmäys moottori
+		// Ylä seinä
+		unit.height + unit.speedY <= object.height + object.y &&
+		// Ala seinä
+		unit.height + unit.y + unit.speedY >= object.height &&
+		// Oikea seinä
+		unit.width + unit.x + unit.speedX >= object.width &&
+		// Vasen seinä
+		unit.width + unit.speedX <= object.width + object.x
+	);
+}
+// TÖRMÄYS LASKINTEN LOPPU
 
+// ANIMATE LOOP ALKU
+let animationId;
 function animate() {
-	requestAnimationFrame(animate);
+	animationId = requestAnimationFrame(animate);
 	// Puhdista vanha ruutu ennen uuden piirtämistä
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	// Piirrä level.arrayn koordinaatit käyttäen Wall classin draw()
 	level.forEach((square) => {
 		square.draw();
-		// Jos minkään seinän collisionDetection palauttaa True, pysäytä hahmo
+		// Jos minkään seinän collisionDetectionA palauttaa True, pysäytä hahmo
 		if (
-			collisionDetection({
+			collisionDetectionA({
 				unit: character,
-				wall: square,
-				// Banaanin ja sitruunan nimet lisätty tähän mut ei viety CollisionDetection
-				/*
-				points: banana,
-				endGame: lemon,
-				*/
+				object: square,
 			})
 		) {
 			console.log('Collision detected');
@@ -224,87 +224,102 @@ function animate() {
 			character.speedY = 0;
 		}
 	});
-	character.update();
-// BANAANIN PIIRTÄMINEN
-	// Banaanin ja apinan törmäys
-	// Jos hahmo osuu vasen/ylä seinään, banaani alkaa sätimään, eli pitäisi laskea taas noita sijainteja
-	// Collisioneita ei myöskään määritelty
-	if (
-		(character.x <= (banana.x + banana.width) && 
-		banana.x <= (character.x + character.width) &&
-		character.y <= (banana.y + banana.height) &&
-		banana.y <= (character.y + character.height)) 
-		=== false) {
-			banana.caught();
-		} 
-	banana.draw();
-// Ja tänne se sitruuna mukaan esim kun eka bansku otettu, heittää randomisti x määrän sitruunoita kentille
-/*
-					lemon.throw();
-*/
 
+	banana.draw();
+	// Banaani napataan
+	if (
+		collisionDetectionB({
+			unit: character,
+			object: banana,
+		})
+	) {
+		console.log('Banaani karvaisessa kätösessä');
+		banana.caught();
+		// lottoa uudet sitruunan paikat
+		lemons.forEach((lemon) => {
+			lemon.throw();
+		});
+	}
+
+	// Piirrä sitruunat
+	lemons.forEach((lemon) => {
+		lemon.draw();
+		if (
+			//Sitruuna napataan
+			collisionDetectionB({
+				unit: character,
+				object: lemon,
+			})
+		) {
+			console.log('Saatanan paha hetelmä');
+			// pysäyttää ruudun
+			cancelAnimationFrame(animationId);
+		}
+	});
+	character.update();
 }
+// ANIMATE LOOP LOPPU
 
 function movement() {
-	let currentIMG = ''
+	let currentIMG = '';
 	// NOT MOVEMENT
 	if (keyPress === 0) {
 		if (character.speedX < 0 || character.speedY < 0) {
 			if (faceDir === 'right') {
-				currentIMG = rightMove[0]
+				currentIMG = rightMove[0];
+			} else {
+				currentIMG = leftMove[0];
 			}
-			else {
-				currentIMG = leftMove[0]
-		}}
-		else {
+		} else {
 			if (faceDir === 'left') {
-				currentIMG = leftMove[0]
+				currentIMG = leftMove[0];
+			} else {
+				currentIMG = rightMove[0];
 			}
-			else {
-				currentIMG = rightMove[0]
-		}}
+		}
 		character.speedX = 0;
-		character.speedY = 0;	
+		character.speedY = 0;
 	}
 	// MOVEMENT
 	else {
 		if (i >= 4) {
-			i = 1
+			i = 1;
 		}
 		// Right
 		if (keyPress === 68) {
-			currentIMG = rightMove[i]
+			currentIMG = rightMove[i];
 		}
 		// Left
 		if (keyPress === 65) {
-			currentIMG = leftMove[i]
+			currentIMG = leftMove[i];
 		}
 		// Up & Down
 		if (keyPress === 87 || 83) {
 			if (faceDir === 'right') {
-				currentIMG = rightMove[i]
+				currentIMG = rightMove[i];
+			} else {
+				currentIMG = leftMove[i];
 			}
-			else {
-				currentIMG = leftMove[i]
-		}}
-		i += 1
+		}
+		i += 1;
 	}
 	// Make new IMG
 	heroImage = new Image();
 	heroImage.src = currentIMG;
-	heroImage.onload = function () {
-		ctx.drawImage(heroImage, 0, 0);
-	};
-};
+	// Tarpeeton, ja aiheuttaa apinan duplikaation kun kosketetaan sitruunaa
+	// heroImage.onload = function () {
+	// 	ctx.drawImage(heroImage, 0, 0);
+	// };
+}
 
 // Liikkeet lyhyemmällä viiveellä, nopeampi reaktio nappiin
 // PUSH KEY
 document.addEventListener('keydown', press);
 function press(key) {
-	console.log(key.keyCode)
+	console.log(key.keyCode);
 	character.speedX = 0;
 	character.speedY = 0;
-	keyPress = key.keyCode
+	keyPress = key.keyCode;
 	if (key.keyCode === 65) {
 		// A    left
 		character.speedX = -2;
@@ -324,13 +339,11 @@ function press(key) {
 		character.speedY = 2;
 	}
 	// Tsekataan mihin suuntaan apina menee
-	movement();
 }
 // RELEASE KEY
 document.addEventListener('keyup', release);
 function release(key) {
 	keyPress = 0;
-	movement();
 }
 
 animate();
