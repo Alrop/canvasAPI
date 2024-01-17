@@ -252,6 +252,12 @@ function animate() {
 			})
 		) {
 			console.log('Saatanan paha hetelmä');
+			ctx.fillStyle = 'red';
+			ctx.font = '48px serif';
+			ctx.textAlign = 'center';
+
+			ctx.fillText('Game Over', canvas.width / 2, 200);
+			ctx.fillText('Your score: ' + 0, canvas.width / 2, 250);
 			// pysäyttää ruudun
 			cancelAnimationFrame(animationId);
 		}
@@ -303,6 +309,7 @@ function movement() {
 		}
 		i += 1;
 	}
+
 	// Make new IMG
 	heroImage = new Image();
 	heroImage.src = currentIMG;
