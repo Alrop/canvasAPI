@@ -351,3 +351,5 @@ document.addEventListener('keyup', release);
 function release(key) {
 	keyPress = 0;
 }
+
+animate();
