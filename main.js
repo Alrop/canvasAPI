@@ -288,28 +288,27 @@ function movement() {
 	}
 	// MOVEMENT
 	else {
-		if (i >= 4) {
+		if (i >= 12) {
 			i = 1;
 		}
 		// Right
 		if (keyPress === 68) {
-			currentIMG = rightMove[i];
+			currentIMG = rightMove[Math.ceil(i / 3)];
 		}
 		// Left
 		if (keyPress === 65) {
-			currentIMG = leftMove[i];
+			currentIMG = leftMove[Math.ceil(i / 3)];
 		}
 		// Up & Down
 		if (keyPress === 87 || 83) {
 			if (faceDir === 'right') {
-				currentIMG = rightMove[i];
+				currentIMG = rightMove[Math.ceil(i / 3)];
 			} else {
-				currentIMG = leftMove[i];
+				currentIMG = leftMove[Math.ceil(i / 3)];
 			}
 		}
 		i += 1;
 	}
-
 	// Make new IMG
 	heroImage = new Image();
 	heroImage.src = currentIMG;
@@ -352,5 +351,3 @@ document.addEventListener('keyup', release);
 function release(key) {
 	keyPress = 0;
 }
-
-animate();
