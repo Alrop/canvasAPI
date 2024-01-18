@@ -1,10 +1,9 @@
 /** @format */
-
+//	document.getElementById("bgMusic").play();
 const canvas = document.getElementById('gameBoard');
 const ctx = canvas.getContext('2d');
-// Animation ON or OFF
-let isPaused = false;	// aloitusarvo että saadaan piirettyä kenttä
 // HERO MOVEMENT
+let currentIMG = ""
 const rightMove = [
 	'photos/static_right.png',
 	'photos/right1.png',
@@ -19,44 +18,22 @@ const leftMove = [
 	'photos/left3.png',
 	'photos/left4.png',
 ];
-let keyPress = 0;
 let i = 0;
 let faceDir = 'right';
 // New Imaget, Saiskohan yhdistettyä yhteen käskyyn?
 // HERO
 let heroImage = new Image();
 	heroImage.src = 'photos/static_right.png';
-/*
-	heroImage.onload = function () {
-		ctx.drawImage(heroImage, 0, 0);
-	};
-*/
 // BANANA
 let bananaImage = new Image();
 	bananaImage.src = 'photos/banana.png';
-/*
-	bananaImage.onload = function () {
-		ctx.drawImage(bananaImage, 0, 0);
-	};
-*/
 // CITRUS
 let lemonImage = new Image();
 	lemonImage.src = 'photos/lemon.png';
-/*
-	lemonImage.onload = function () {
-		ctx.drawImage(lemonImage, 0, 0);
-	};
-*/
 // ROCK COLLISION
 let rockImage = new Image();
 	rockImage.src = 'photos/rock.png';
-/*
-	rockImage.onload = function () {
-		ctx.drawImage(rockImage, 0, 0);
-	};
-*/
 
-// ALEKSIN RIVIT
 // prettier-ignore
 // H: 28 riviä	W: 27
 const map = [
@@ -83,7 +60,6 @@ const map = [
 	['#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', '#'],
 	['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#']
 ];
-
 const level = [];
 
 class Wall {
@@ -121,29 +97,30 @@ map.forEach((row, i) => {
 	});
 });
 
-// Määritellään hahmo
+// OBJECTS
 class Hero {
-	constructor(width, height) {
-		this.width = width;
-		this.height = height;
+	constructor(x, y) {
+		this.x = x;
+		this.y = y;
 		this.speedX = 0;
 		this.speedY = 0;
-		// this.y ja this.x määrittävät pelaajan koon
-		this.y = 40;
-		this.x = this.y;
+		// Määritellään pelaajan koko
+		this.height = 40;
+		this.width = this.height;
 	}
 	draw() {
-		ctx.drawImage(heroImage, this.width, this.height, this.x, this.y);
+		ctx.drawImage(heroImage, this.x, this.y, this.width, this.height);
 	}
-	update() {
-		movement();
-		this.draw();
-		this.width += this.speedX;
-		this.height += this.speedY;
-	}
-}
 
-// Määritellään banaani lähtöruuduille
+/*	Tämä on turha täällä koska tämä määritellään movement funktiossa
+	update() {
+	//	movement();
+		this.draw();
+	//	this.width += this.speedX;
+	//	this.height += this.speedY;
+	}
+*/
+}
 class BananaFruit {
 	constructor(width, height) {
 		this.width = width;
@@ -161,8 +138,6 @@ class BananaFruit {
 		this.draw();
 	}
 }
-
-// Määritellään sitruuna jossain vaiheessa kentälle
 class LemonFruit {
 	constructor() {
 		this.width = Math.round(2 + Math.random() * (canvas.width - 64));
@@ -180,7 +155,6 @@ class LemonFruit {
 		this.draw();
 	}
 }
-// Toimisko ilman omaa nimeä (pelkkä new ....)
 character = new Hero(15, 20); // lähtö sijainti
 banana = new BananaFruit(200, 150); // Banaanin lähtösijainti
 // Arrayn sitruunat == kuinka monta sitruunaa kentällä
@@ -192,13 +166,13 @@ function collisionDetectionA({ unit, object }) {
 	return (
 		// Neliön törmäys moottori
 		// Ylä seinä
-		unit.height + unit.speedY <= object.position.y + object.height &&
+		unit.y + unit.speedY <= object.position.y + object.height &&
 		// Ala seinä
-		unit.height + unit.y + unit.speedY >= object.position.y &&
+		unit.y + unit.height + unit.speedY >= object.position.y &&
 		// Oikea seinä
-		unit.width + unit.x + unit.speedX >= object.position.x &&
+		unit.x + unit.width + unit.speedX >= object.position.x &&
 		// Vasen seinä
-		unit.width + unit.speedX <= object.position.x + object.width
+		unit.x + unit.speedX <= object.position.x + object.width
 	);
 }
 // Vaihtoehtoinen törmäys laskin
@@ -217,33 +191,18 @@ function collisionDetectionB({ unit, object }) {
 }
 // TÖRMÄYS LASKINTEN LOPPU
 
-// Voisko hyödyntää jotenkin että piirtäisi ensin ja sitten animaatio ? 
-/*
-function gameboard() {
-	// Piirrä level.arrayn koordinaatit käyttäen Wall classin draw()
-	level.forEach((square) => {	// Tämä piirtää pelikentän
-		square.draw();
-	});
-	lemons.forEach((lemon) => {	// Tämä piirtää sitruunat
-		lemon.draw();
-	});
-	banana.draw();	// Tämä piirtää banaanin kentälle
-	character.draw();	// Tämä piirtää hahmon kentälle
-};
-*/
-// ANIMATE LOOP ALKU
 let animationId;
+// ANIMATE LOOP ALKU
 function animate() {
-	if (isPaused == true) {
-		return ;
-	}
 	animationId = requestAnimationFrame(animate);
 	// Puhdista vanha ruutu ennen uuden piirtämistä
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
-	character.update();
+	character.draw();
 	// Piirrä level.arrayn koordinaatit käyttäen Wall classin draw()
 	level.forEach((square) => {
 		square.draw();
+		// Tätä ei tarvitse täällä koska muuten apinan animaatio kuseee || Voipi poistaa jos ok Aleksille
+		/*
 		// Jos minkään seinän collisionDetectionA palauttaa True, pysäytä hahmo
 		if (
 			collisionDetectionA({
@@ -255,6 +214,7 @@ function animate() {
 			character.speedX = 0;
 			character.speedY = 0;
 		}
+		*/
 	});
 	banana.draw();
 	// Banaani napataan
@@ -264,7 +224,8 @@ function animate() {
 			object: banana,
 		})
 	) {
-		console.log('Banaani karvaisessa kätösessä');
+		console.log('Banaani karvaisessa kätösessä');	
+		document.getElementById("bananaCaught").play();
 		banana.caught();
 		// lottoa uudet sitruunan paikat
 		lemons.forEach((lemon) => {
@@ -282,6 +243,8 @@ function animate() {
 			})
 		) {
 			console.log('Saatanan paha hetelmä');
+			document.getElementById("bgMusic").muted = true;
+			document.getElementById("lemonCaught").play();
 			ctx.fillStyle = 'red';
 			ctx.font = '48px serif';
 			ctx.textAlign = 'center';
@@ -297,55 +260,51 @@ function animate() {
 
 // MOVEMENTS
 function movement() {
-//	console.log("loopp")
-	// NOT MOVEMENT
-	if (keyPress === 0) {
-		if (character.speedX < 0 || character.speedY < 0) {
-			if (faceDir === 'right') {
-				currentIMG = rightMove[0];
-			} else {
-				currentIMG = leftMove[0];
-			}
+// Täällä tsekataan osuuko apina seinään jolloin ylimääräinen luuppaus loppuu
+	level.forEach((square) => {
+		// Jos minkään seinän collisionDetectionA palauttaa True, pysäytä hahmo
+		if (
+			collisionDetectionA({
+				unit: character,
+				object: square,
+			})
+		) {
+			console.log('Collision detected');
+			character.speedX = 0;
+			character.speedY = 0;
+		}
+	});
+// Täällä asetetaan myös apinan uusi koordinaatio
+	character.x += character.speedX;
+	character.y += character.speedY;
+	if (i >= 4) {
+		i = 1;
+	}
+	if (character.speedX === 0 && character.speedY === 0) {
+		if (faceDir === 'right') {
+			currentIMG = rightMove[0];
 		} else {
-			if (faceDir === 'left') {
-				currentIMG = leftMove[0];
-			} else {
-				currentIMG = rightMove[0];
-			}
+			currentIMG = leftMove[0];
 		}
-		character.speedX = 0;
-		character.speedY = 0;
 	}
-	// MOVEMENT
-	else {
-		if (i >= 12) {
-		isPaused = false
-		if (i >= 4) {
-			i = 1;
+	if (character.speedY > 0 || character.speedY < 0) {
+		if (faceDir === 'right') {
+			currentIMG = rightMove[i];
+		} else {
+			currentIMG = leftMove[i];
 		}
-		// Right
-		if (keyPress === 68) {
-			currentIMG = rightMove[Math.ceil(i / 3)];
-		}
-		// Left
-		if (keyPress === 65) {
-			currentIMG = leftMove[Math.ceil(i / 3)];
-		}
-		// Up & Down
-		if (keyPress === 87 || 83) {
-			if (faceDir === 'right') {
-				currentIMG = rightMove[Math.ceil(i / 3)];
-			} else {
-				currentIMG = leftMove[Math.ceil(i / 3)];
-			}
-		}
-		i += 1;
 	}
+	if (character.speedX > 0 ) {
+		currentIMG = rightMove[i]
+	}
+	if (character.speedX < 0) {
+		currentIMG = leftMove[i]
+	}
+	i += 1;
 	heroImage = new Image();
 	heroImage.src = currentIMG;
 }
-
-// Liikkeet lyhyemmällä viiveellä, nopeampi reaktio nappiin
+// Näihin valitettavasti jää viive liikkumisen aloitukseen mutta animaatio ainakin toimii
 // PUSH KEY
 document.addEventListener('keydown', press);
 function press(key) {
@@ -355,31 +314,36 @@ function press(key) {
 	keyPress = key.keyCode;
 	if (key.keyCode === 65) {
 		// A    left
-		character.speedX = -2;
+		character.speedX = -8;
 		faceDir = 'left';
 	}
 	if (key.keyCode === 68) {
 		// D    right
-		character.speedX = 2;
+		character.speedX = 8;
 		faceDir = 'right';
 	}
 	if (key.keyCode === 87) {
 		// W    up
-		character.speedY = -2;
+		character.speedY = -8;
 	}
 	if (key.keyCode === 83) {
 		// S    down
-		character.speedY = 2;
+		character.speedY = 8;
 	}
-	// Tsekataan mihin suuntaan apina menee
 	movement();
 };
-
 // RELEASE KEY
 document.addEventListener('keyup', release);
-function release() {
-	keyPress = 0;
-	isPaused = true
+function release(key) {
+	i = 0;
+	if (key.keyCode === 65 || key.keyCode === 68) {
+		// A    left		D	right
+		character.speedX = 0
+	}
+	if (key.keyCode === 87 || key.keyCode === 83) {
+		// W    up			S	down
+		character.speedY = 0
+	}
+	movement();
 }
-
-animate()
+animate();
