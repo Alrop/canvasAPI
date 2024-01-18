@@ -2,6 +2,8 @@
 
 const canvas = document.getElementById('gameBoard');
 const ctx = canvas.getContext('2d');
+// Animation ON or OFF
+let isPaused = false;	// aloitusarvo että saadaan piirettyä kenttä
 // HERO MOVEMENT
 const rightMove = [
 	'photos/static_right.png',
@@ -21,25 +23,38 @@ let keyPress = 0;
 let i = 0;
 let faceDir = 'right';
 // New Imaget, Saiskohan yhdistettyä yhteen käskyyn?
-
+// HERO
+let heroImage = new Image();
+	heroImage.src = 'photos/static_right.png';
+/*
+	heroImage.onload = function () {
+		ctx.drawImage(heroImage, 0, 0);
+	};
+*/
 // BANANA
 let bananaImage = new Image();
-bananaImage.src = 'photos/banana.png';
-bananaImage.onload = function () {
-	ctx.drawImage(bananaImage, 0, 0);
-};
+	bananaImage.src = 'photos/banana.png';
+/*
+	bananaImage.onload = function () {
+		ctx.drawImage(bananaImage, 0, 0);
+	};
+*/
 // CITRUS
 let lemonImage = new Image();
-lemonImage.src = 'photos/lemon.png';
-lemonImage.onload = function () {
-	ctx.drawImage(lemonImage, 0, 0);
-};
+	lemonImage.src = 'photos/lemon.png';
+/*
+	lemonImage.onload = function () {
+		ctx.drawImage(lemonImage, 0, 0);
+	};
+*/
 // ROCK COLLISION
 let rockImage = new Image();
-rockImage.src = 'photos/rock.png';
-rockImage.onload = function () {
-	ctx.drawImage(rockImage, 0, 0);
-};
+	rockImage.src = 'photos/rock.png';
+/*
+	rockImage.onload = function () {
+		ctx.drawImage(rockImage, 0, 0);
+	};
+*/
 
 // ALEKSIN RIVIT
 // prettier-ignore
@@ -167,8 +182,7 @@ class LemonFruit {
 }
 // Toimisko ilman omaa nimeä (pelkkä new ....)
 character = new Hero(15, 20); // lähtö sijainti
-banana = new BananaFruit(220, 200); // Banaanin lähtösijainti
-
+banana = new BananaFruit(200, 150); // Banaanin lähtösijainti
 // Arrayn sitruunat == kuinka monta sitruunaa kentällä
 lemons = [new LemonFruit(), new LemonFruit()];
 
@@ -203,12 +217,30 @@ function collisionDetectionB({ unit, object }) {
 }
 // TÖRMÄYS LASKINTEN LOPPU
 
+// Voisko hyödyntää jotenkin että piirtäisi ensin ja sitten animaatio ? 
+/*
+function gameboard() {
+	// Piirrä level.arrayn koordinaatit käyttäen Wall classin draw()
+	level.forEach((square) => {	// Tämä piirtää pelikentän
+		square.draw();
+	});
+	lemons.forEach((lemon) => {	// Tämä piirtää sitruunat
+		lemon.draw();
+	});
+	banana.draw();	// Tämä piirtää banaanin kentälle
+	character.draw();	// Tämä piirtää hahmon kentälle
+};
+*/
 // ANIMATE LOOP ALKU
 let animationId;
 function animate() {
+	if (isPaused == true) {
+		return ;
+	}
 	animationId = requestAnimationFrame(animate);
 	// Puhdista vanha ruutu ennen uuden piirtämistä
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
+	character.update();
 	// Piirrä level.arrayn koordinaatit käyttäen Wall classin draw()
 	level.forEach((square) => {
 		square.draw();
@@ -224,7 +256,6 @@ function animate() {
 			character.speedY = 0;
 		}
 	});
-
 	banana.draw();
 	// Banaani napataan
 	if (
@@ -240,7 +271,6 @@ function animate() {
 			lemon.throw();
 		});
 	}
-
 	// Piirrä sitruunat
 	lemons.forEach((lemon) => {
 		lemon.draw();
@@ -256,12 +286,12 @@ function animate() {
 			cancelAnimationFrame(animationId);
 		}
 	});
-	character.update();
 }
 // ANIMATE LOOP LOPPU
 
+// MOVEMENTS
 function movement() {
-	let currentIMG = '';
+//	console.log("loopp")
 	// NOT MOVEMENT
 	if (keyPress === 0) {
 		if (character.speedX < 0 || character.speedY < 0) {
@@ -282,6 +312,7 @@ function movement() {
 	}
 	// MOVEMENT
 	else {
+		isPaused = false
 		if (i >= 4) {
 			i = 1;
 		}
@@ -303,13 +334,8 @@ function movement() {
 		}
 		i += 1;
 	}
-	// Make new IMG
 	heroImage = new Image();
 	heroImage.src = currentIMG;
-	// Tarpeeton, ja aiheuttaa apinan duplikaation kun kosketetaan sitruunaa
-	// heroImage.onload = function () {
-	// 	ctx.drawImage(heroImage, 0, 0);
-	// };
 }
 
 // Liikkeet lyhyemmällä viiveellä, nopeampi reaktio nappiin
@@ -339,11 +365,14 @@ function press(key) {
 		character.speedY = 2;
 	}
 	// Tsekataan mihin suuntaan apina menee
-}
+	movement();
+};
+
 // RELEASE KEY
 document.addEventListener('keyup', release);
-function release(key) {
+function release() {
 	keyPress = 0;
+	isPaused = true
 }
 
 animate();
