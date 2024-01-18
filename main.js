@@ -282,6 +282,12 @@ function animate() {
 			})
 		) {
 			console.log('Saatanan paha hetelmä');
+			ctx.fillStyle = 'red';
+			ctx.font = '48px serif';
+			ctx.textAlign = 'center';
+
+			ctx.fillText('Game Over', canvas.width / 2, 200);
+			ctx.fillText('Your score: ' + 0, canvas.width / 2, 250);
 			// pysäyttää ruudun
 			cancelAnimationFrame(animationId);
 		}
@@ -312,24 +318,25 @@ function movement() {
 	}
 	// MOVEMENT
 	else {
+		if (i >= 12) {
 		isPaused = false
 		if (i >= 4) {
 			i = 1;
 		}
 		// Right
 		if (keyPress === 68) {
-			currentIMG = rightMove[i];
+			currentIMG = rightMove[Math.ceil(i / 3)];
 		}
 		// Left
 		if (keyPress === 65) {
-			currentIMG = leftMove[i];
+			currentIMG = leftMove[Math.ceil(i / 3)];
 		}
 		// Up & Down
 		if (keyPress === 87 || 83) {
 			if (faceDir === 'right') {
-				currentIMG = rightMove[i];
+				currentIMG = rightMove[Math.ceil(i / 3)];
 			} else {
-				currentIMG = leftMove[i];
+				currentIMG = leftMove[Math.ceil(i / 3)];
 			}
 		}
 		i += 1;
@@ -375,4 +382,4 @@ function release() {
 	isPaused = true
 }
 
-animate();
+animate()
