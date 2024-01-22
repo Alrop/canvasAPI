@@ -1,7 +1,58 @@
 html {
-    text-align: center; 
+    margin: auto;
+    display: table;
+}
+body {    
+    font-family: 'Oswald', sans-serif;
     margin-top: 50px;
+    background-image: url(photos/bg.jpg);
+    background-size: 340%;
+    background-repeat: no-repeat;
+    background-position: center;
+    max-width: 100%;
+}
+* {box-sizing: border-box; }
+main {
+    width: 810px;
+    justify-content: center;
+}
+.info {
+    justify-content: center;
+    height: 70px;
+    float: left;
+    color: black;
+}
+#muteBtn {
+    margin-top: 25px;
+    background-color: transparent;
+    border: 1px solid transparent;
+    border-radius: 30%;
+    cursor: pointer;
+    margin-left: 25px;
+}
+#muteBtn:hover { background-color: rgba(226, 168, 43, 0.863);}
+#mute {
+    height: 40px;
+    width: 40px;
+}
+#rules {
+    margin-top: 25px;
+    margin-bottom: 0;
+    width: 600px;
+    text-align: center;
+    font-size: 30px;
+    padding: 0;
 }
 #points {
-    font-size: 30px;
+    font-size: 50px;
+    float: inline-end;
+    margin: 0;
+}
+#bananaPoints {
+    height: 40px;
+    width: 40px;
+    margin-left: 20px;
+}
+#gameboard {
+    border: 3px solid black;
 }

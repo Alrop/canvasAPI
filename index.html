@@ -3,25 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
-    <link rel="stylesheet" type="text/css" href="style.css">
 
-    <title>Peli</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <!-- GOOGLE FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Acme&family=Montserrat&family=Open+Sans:wght@300&family=Oswald&family=Poppins:wght@200&family=Rock+Salt&family=Rubik+Doodle+Shadow&display=swap" rel="stylesheet"> 
+
+    <title>Apinalle banaaneja</title>
 </head>
 <body>
+    <main>
     <!-- AUDIO -->
-    <audio src="sounds/catch_banana.mp3" id="bananaCaught"></audio>
-    <audio src="sounds/BGMusic.mp3" id="bgMusic" loop="true"></audio>
-    <audio src="sounds/catch_lemon.mp3" id="lemonCaught"></audio>
-    <div id="information">
-        <p>tähän pelin inffoa</p>
-    <div id="points">
-        <img src="photos/banana.png" alt="banana" id="bananaPoints">pistelaskuri
-    </div>
-    </div>
+        <audio src="sounds/catch_banana.mp3" id="bananaCaught"></audio>
+        <audio src="sounds/BGMusic.mp3" id="bgMusic" loop="true"></audio>
+        <audio src="sounds/catch_lemon.mp3" id="lemonCaught"></audio>
+    <!-- MUTE OR NOT -->
+        <div class="info">
+            <button id="muteBtn" type="button">
+                <img src="photos/sound_on.png" alt="sounds" id="mute" onclick="checkMute()">
+            </button>
+        </div>
+    <!-- RULES -->
+        <div class="info">
+            <p id="rules">Kerää apinalle banaaneja, vältä sitruunoita </p>
+        </div>
+    <!-- POINTS -->
+        <div class="info">
+            <p id="points">0 <img src="photos/banana.png" alt="banana" id="bananaPoints"></p>
+        </div>
     <!-- PELIAREENA -->
-    <canvas id="gameBoard" width="810" height="600" style="background-image: url(photos/Background.jpg);"></canvas>
-
+        <canvas id="gameboard" width="810" height="600" style="background-image: url(photos/Background.jpg);"></canvas>
+    </main>
 </body>
 <script src="main.js"></script>
 </html>
