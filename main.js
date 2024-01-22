@@ -3,7 +3,7 @@ document.getElementById('bgMusic').play();
 const canvas = document.getElementById('gameboard');
 const ctx = canvas.getContext('2d');
 // HERO MOVEMENT
-let currentIMG = ""
+let currentIMG = '';
 const rightMove = [
 	'photos/static_right.png',
 	'photos/right1.png',
@@ -19,20 +19,22 @@ const leftMove = [
 	'photos/left4.png',
 ];
 let i = 0;
+let score = 0;
+
 let faceDir = 'right';
 // New Imaget, Saiskohan yhdistettyä yhteen käskyyn?
 // HERO
 let heroImage = new Image();
-	heroImage.src = 'photos/static_right.png';
+heroImage.src = 'photos/static_right.png';
 // BANANA
 let bananaImage = new Image();
-	bananaImage.src = 'photos/banana.png';
+bananaImage.src = 'photos/banana.png';
 // CITRUS
 let lemonImage = new Image();
-	lemonImage.src = 'photos/lemon.png';
+lemonImage.src = 'photos/lemon.png';
 // ROCK COLLISION
 let rockImage = new Image();
-	rockImage.src = 'photos/rock.png';
+rockImage.src = 'photos/rock.png';
 
 // prettier-ignore
 // H: 28 riviä	W: 27
@@ -78,36 +80,23 @@ function checkMute() {
 }
 
 class Wall {
-	constructor({ position }) {
-		this.position = position;
+	constructor(x, y) {
+		this.x = x;
+		this.y = y;
+
 		this.width = 30;
 		this.height = this.width;
 	}
 	draw() {
-		ctx.drawImage(
-			rockImage,
-			this.position.x,
-			this.position.y,
-			this.width,
-			this.height
-		);
+		ctx.drawImage(rockImage, this.x, this.y, this.width, this.height);
 	}
 }
 
 // Jos i, j indexissä oleva symboli `#`, luo Wall objekti ja työnnä se level.array
 map.forEach((row, i) => {
-	// console.log(row, i);
 	row.forEach((tile, j) => {
-		// console.log(tile, j);
 		if (tile == '#') {
-			level.push(
-				new Wall({
-					position: {
-						x: 30 * j - 30,
-						y: 30 * i - 30,
-					},
-				})
-			);
+			level.push(new Wall((x = 30 * j - 30), (y = 30 * i - 30)));
 		}
 	});
 });
@@ -126,31 +115,22 @@ class Hero {
 	draw() {
 		ctx.drawImage(heroImage, this.x, this.y, this.width, this.height);
 	}
-
-/*	Tämä on turha täällä koska tämä määritellään movement funktiossa
-	update() {
-	//	movement();
-		this.draw();
-	//	this.width += this.speedX;
-	//	this.height += this.speedY;
-	}
-*/
 }
+
 class BananaFruit {
 	constructor(x, y) {
 		this.x = x;
 		this.y = y;
 		// Banaanin koon määrittely || Normikoko 50x50
-		this.height = 50;
 		this.width = 50;
+		this.height = 50;
 	}
 	draw() {
-		ctx.drawImage(bananaImage, this.x, this.y);
+		ctx.drawImage(bananaImage, this.x, this.y, this.width, this.height);
 	}
 	caught() {
 		this.x = Math.round(2 + Math.random() * (canvas.width - 64));
 		this.y = Math.round(32 + Math.random() * (canvas.height - 64));
-		this.draw();
 	}
 }
 
@@ -158,9 +138,11 @@ class LemonFruit {
 	constructor() {
 		this.x = Math.round(2 + Math.random() * (canvas.width - 64));
 		this.y = Math.round(32 + Math.random() * (canvas.height - 64));
+		this.x = Math.round(2 + Math.random() * (canvas.width - 64));
+		this.y = Math.round(32 + Math.random() * (canvas.height - 64));
 		// Situunan koon määrittely || Normikoko 50x50
-		this.height = 50;
 		this.width = 50;
+		this.height = 50;
 	}
 	draw() {
 		ctx.drawImage(lemonImage, this.x, this.y, this.width, this.height);
@@ -168,32 +150,15 @@ class LemonFruit {
 	throw() {
 		this.x = Math.round(2 + Math.random() * (canvas.width - 64));
 		this.y = Math.round(32 + Math.random() * (canvas.height - 64));
-		this.draw();
 	}
 }
 character = new Hero(15, 20); // lähtö sijainti
 banana = new BananaFruit(200, 150); // Banaanin lähtösijainti
-// Arrayn sitruunat == kuinka monta sitruunaa kentällä
-lemons = [new LemonFruit(), new LemonFruit()];
+lemons = [new LemonFruit(), new LemonFruit()]; // Arrayn sitruunat == kuinka monta sitruunaa kentällä
 
-// TÖRMÄYS LASKINTEN ALKU
+// TÖRMÄYS LASMIKEN ALKU
 // Palauttaa True jos "unit" törmäisi "object" seuraavassa ruudussa
 function collisionDetectionA({ unit, object }) {
-	return (
-		// Neliön törmäys moottori
-		// Ylä seinä
-		unit.y + unit.speedY <= object.position.y + object.height &&
-		// Ala seinä
-		unit.y + unit.height + unit.speedY >= object.position.y &&
-		// Oikea seinä
-		unit.x + unit.width + unit.speedX >= object.position.x &&
-		// Vasen seinä
-		unit.x + unit.speedX <= object.position.x + object.width
-	);
-}
-// Vaihtoehtoinen törmäys laskin
-// unit = hero	Object = Lemon // Banaana
-function collisionDetectionB({ unit, object }) {
 	return (
 		// Neliön törmäys moottori
 		// Ylä seinä
@@ -206,8 +171,6 @@ function collisionDetectionB({ unit, object }) {
 		unit.x + unit.speedX <= object.x + object.width
 	);
 }
-<<<<<<< HEAD
-=======
 // Vaihtoehtoinen törmäys laskin
 // unit = hero	Object = Lemon // Banaana
 function collisionDetectionB(unit, object) {
@@ -224,7 +187,6 @@ function collisionDetectionB(unit, object) {
 	);
 }
 
->>>>>>> b0ffcce0d8ac1191c214b55e8cdd8cbc01d12c53
 // TÖRMÄYS LASKINTEN LOPPU
 
 let animationId;
@@ -242,72 +204,17 @@ function animate() {
 	});
 
 	// Piirrä level.arrayn koordinaatit käyttäen Wall classin draw()
+
 	level.forEach((square) => {
 		square.draw();
-<<<<<<< HEAD
-	});
-
-// Tähän mennessä on heitetty paikalleen pelikenttä (seinät, Hero, Hetelmät ja banaani)
-// Tässä pitäisi erikseen katsoa osuuko joku niistä sitten seinään
-	level.forEach((square) => {
-	// Tsekataan banaanin spawnaus seinään
-		if ( collisionDetectionA({ unit: banana, object: square, })) {
-			console.log('Banaana törmäsi seinään');
-			banana.draw();
-		}
-	// Tsekataan sitruunan spawnaus seinään
-		lemons.forEach((lemon) => {
-			if (collisionDetectionA({unit: lemon, object: square, })) {
-				console.log('Saatanan paha hetelmä törmäsi seinään');
-				lemon.draw();
-		}})
-	});
-//	banana.draw();
-	// Banaani napataan
-	if (
-		collisionDetectionB({
-			unit: character,
-			object: banana,
-		})
-	) {
-		console.log('Banaani karvaisessa kätösessä');	
-		document.getElementById("bananaCaught").play();
-		banana.caught();
-		// lottoa uudet sitruunan paikat
-		lemons.forEach((lemon) => {
-			lemon.throw();
-		});
-	}
-	// Piirrä sitruunat
-	lemons.forEach((lemon) => {
-		lemon.draw();
-		if (
-			//Sitruuna napataan
-			collisionDetectionB({
-				unit: character,
-				object: lemon,
-			})
-		) {
-			console.log('Saatanan paha hetelmä');
-			document.getElementById("bgMusic").muted = true;
-			document.getElementById("lemonCaught").play();
-			ctx.fillStyle = 'red';
-			ctx.font = '48px serif';
-			ctx.textAlign = 'center';
-
-			ctx.fillText('Game Over', canvas.width / 2, 200);
-			ctx.fillText('Your score: ' + 0, canvas.width / 2, 250);
-			// pysäyttää ruudun
-			cancelAnimationFrame(animationId);
-		}
-	});
-=======
 		// Tarkistetaan osuuko banaan seinään tai pelaajaan. Jos kyllä niin lottoa uusi paikka, muuten piirrä
 		if (collisionDetectionB(banana, square)) {
 			while (
 				collisionDetectionB(banana, square) ||
 				collisionDetectionB(banana, character)
-			) {}
+			) {
+				banana.caught();
+			}
 		} else {
 			banana.draw();
 		}
@@ -336,6 +243,9 @@ function animate() {
 				console.log('Banaani karvaisessa kätösessä');
 				document.getElementById('bananaCaught').play();
 				banana.caught();
+				score += 1;
+				document.getElementById('points').innerHTML = score;
+
 				// lottoa uudet sitruunan paikat
 				lemons.forEach((lemon) => {
 					lemon.throw();
@@ -356,21 +266,20 @@ function animate() {
 				ctx.textAlign = 'center';
 
 				ctx.fillText('Game Over', canvas.width / 2, 200);
-				ctx.fillText('Your score: ' + 0, canvas.width / 2, 250);
+				ctx.fillText('Your score: ' + score, canvas.width / 2, 250);
 				// pysäyttää ruudun
 				cancelAnimationFrame(animationId);
 			}
 		});
 	});
->>>>>>> b0ffcce0d8ac1191c214b55e8cdd8cbc01d12c53
 }
 // ANIMATE LOOP LOPPU
 
 // MOVEMENTS
 function movement() {
-// Täällä tsekataan osuuko apina seinään jolloin ylimääräinen luuppaus loppuu
+	// Täällä tsekataan osuuko apina seinään jolloin ylimääräinen luuppaus loppuu
 	level.forEach((square) => {
-		// Jos minkään seinän collisionDetectionA palauttaa True, pysäytä hahmo
+		// Jos minkään seinän collisionDetection palauttaa True, pysäytä hahmo
 		if (
 			collisionDetectionA({
 				unit: character,
@@ -382,7 +291,7 @@ function movement() {
 			character.speedY = 0;
 		}
 	});
-// Täällä asetetaan myös apinan uusi koordinaatio
+	// Täällä asetetaan myös apinan uusi koordinaatio
 	character.x += character.speedX;
 	character.y += character.speedY;
 	if (i >= 4) {
@@ -402,11 +311,11 @@ function movement() {
 			currentIMG = leftMove[i];
 		}
 	}
-	if (character.speedX > 0 ) {
-		currentIMG = rightMove[i]
+	if (character.speedX > 0) {
+		currentIMG = rightMove[i];
 	}
 	if (character.speedX < 0) {
-		currentIMG = leftMove[i]
+		currentIMG = leftMove[i];
 	}
 	i += 1;
 	heroImage = new Image();
@@ -439,18 +348,18 @@ function press(key) {
 		character.speedY = 8;
 	}
 	movement();
-};
+}
 // RELEASE KEY
 document.addEventListener('keyup', release);
 function release(key) {
 	i = 0;
 	if (key.keyCode === 65 || key.keyCode === 68) {
 		// A    left		D	right
-		character.speedX = 0
+		character.speedX = 0;
 	}
 	if (key.keyCode === 87 || key.keyCode === 83) {
 		// W    up			S	down
-		character.speedY = 0
+		character.speedY = 0;
 	}
 	movement();
 }
