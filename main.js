@@ -171,22 +171,6 @@ function collisionDetectionA({ unit, object }) {
 		unit.x + unit.speedX <= object.x + object.width
 	);
 }
-// Vaihtoehtoinen törmäys laskin
-// unit = hero	Object = Lemon // Banaana
-function collisionDetectionB(unit, object) {
-	return (
-		// Neliön törmäys moottori
-		// Ylä seinä
-		unit.y <= object.y + object.height &&
-		// Ala seinä
-		unit.y + unit.height >= object.y &&
-		// Oikea seinä
-		unit.x + unit.width >= object.x &&
-		// Vasen seinä
-		unit.x <= object.x + object.width
-	);
-}
-
 // TÖRMÄYS LASKINTEN LOPPU
 
 let animationId;
@@ -207,70 +191,62 @@ function animate() {
 
 	level.forEach((square) => {
 		square.draw();
-		// Tarkistetaan osuuko banaan seinään tai pelaajaan. Jos kyllä niin lottoa uusi paikka, muuten piirrä
-		if (collisionDetectionB(banana, square)) {
-			while (
-				collisionDetectionB(banana, square) ||
-				collisionDetectionB(banana, character)
-			) {
-				banana.caught();
-			}
-		} else {
+	});
+
+	// Tähän mennessä on heitetty paikalleen pelikenttä (seinät, Hero, Hetelmät ja banaani)
+	// Tässä pitäisi erikseen katsoa osuuko joku niistä sitten seinään
+	level.forEach((square) => {
+		// Tsekataan banaanin spawnaus seinään
+		if (collisionDetectionA({ unit: banana, object: square })) {
+			console.log('Banaana törmäsi seinään');
 			banana.draw();
 		}
-
-		// Tarkistetaan osuuko minkään sitruunan uusi paikka seinään, pelaajaan, tai banaaniin. Jos kyllä niin lottoa uusi paikka, muuten piirrä
+		// Tsekataan sitruunan spawnaus seinään
 		lemons.forEach((lemon) => {
-			if (collisionDetectionB(lemon, square)) {
-				while (
-					collisionDetectionB(lemon, square) ||
-					collisionDetectionB(lemon, character) ||
-					collisionDetectionB(lemon, banana)
-				) {
-					lemon.throw();
-				}
-			} else {
+			if (collisionDetectionA({ unit: lemon, object: square })) {
+				console.log('Saatanan paha hetelmä törmäsi seinään');
 				lemon.draw();
 			}
-			// Banaani napataan
-
-			if (
-				collisionDetectionA({
-					unit: character,
-					object: banana,
-				})
-			) {
-				console.log('Banaani karvaisessa kätösessä');
-				document.getElementById('bananaCaught').play();
-				banana.caught();
-				score += 1;
-				document.getElementById('points').innerHTML = score;
-
-				// lottoa uudet sitruunan paikat
-				lemons.forEach((lemon) => {
-					lemon.throw();
-				});
-			}
-			//Sitruuna napataan
-			if (
-				collisionDetectionA({
-					unit: character,
-					object: lemon,
-				})
-			) {
-				console.log('Saatanan paha hetelmä');
-				document.getElementById('bgMusic').muted = true;
-				document.getElementById('lemonCaught').play();
-				ctx.fillStyle = 'red';
-				ctx.font = '48px serif';
-				ctx.textAlign = 'center';
-
-				ctx.fillText('Game Over', canvas.width / 2, 200);
-				ctx.fillText('Your score: ' + score, canvas.width / 2, 250);
-				// pysäyttää ruudun
-				cancelAnimationFrame(animationId);
-			}
 		});
+	});
+	//	banana.draw();
+	// Banaani napataan
+	if (
+		collisionDetectionB({
+			unit: character,
+			object: banana,
+		})
+	) {
+		console.log('Banaani karvaisessa kätösessä');
+		document.getElementById('bananaCaught').play();
+		banana.caught();
+		// lottoa uudet sitruunan paikat
+		lemons.forEach((lemon) => {
+			lemon.throw();
+		});
+	}
+	// Piirrä sitruunat
+	lemons.forEach((lemon) => {
+		lemon.draw();
+		if (
+			//Sitruuna napataan
+			collisionDetectionB({
+				unit: character,
+				object: lemon,
+			})
+		) {
+			console.log('Saatanan paha hetelmä');
+			document.getElementById('bgMusic').muted = true;
+			document.getElementById('lemonCaught').play();
+			ctx.fillStyle = 'red';
+			ctx.font = '48px serif';
+			ctx.textAlign = 'center';
+
+			ctx.fillText('Game Over', canvas.width / 2, 200);
+			ctx.fillText('Your score: ' + 0, canvas.width / 2, 250);
+			// pysäyttää ruudun
+			cancelAnimationFrame(animationId);
+		}
 	});
 }
 // ANIMATE LOOP LOPPU
