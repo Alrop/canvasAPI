@@ -45,13 +45,15 @@ main {
 }
 #points {
     font-size: 50px;
-    float: inline-end;
+    float: right;
     margin: 0;
 }
 #bananaPoints {
+    margin-top: 25px;
     height: 40px;
     width: 40px;
     margin-left: 20px;
+    float: inline-end;
 }
 #gameboard {
     border: 3px solid black;
