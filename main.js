@@ -119,9 +119,6 @@ class BananaFruit {
 	constructor(x, y) {
 		this.x = x;
 		this.y = y;
-	constructor(x, y) {
-		this.x = x;
-		this.y = y;
 		// Banaanin koon määrittely || Normikoko 50x50
 		this.width = 50;
 		this.height = 50;
@@ -145,7 +142,6 @@ class LemonFruit {
 		this.height = 50;
 	}
 	draw() {
-		ctx.drawImage(lemonImage, this.x, this.y, this.width, this.height);
 		ctx.drawImage(lemonImage, this.x, this.y, this.width, this.height);
 	}
 	throw() {
