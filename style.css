@@ -13,7 +13,7 @@ body {
 }
 * {box-sizing: border-box; }
 main {
-    width: 810px;
+    width: 816px;
     justify-content: center;
 }
 .info {
