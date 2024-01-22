@@ -325,7 +325,7 @@ function movement() {
 // PUSH KEY
 document.addEventListener('keydown', press);
 function press(key) {
-	console.log(key.keyCode);
+	// console.log(key.keyCode);
 	character.speedX = 0;
 	character.speedY = 0;
 	keyPress = key.keyCode;
