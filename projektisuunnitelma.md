@@ -6,7 +6,7 @@ Tekijät:
         - Hahmon liikuttaminen ja animointi 
         - HTML/CSS tyylitys 
         - Komponenttien classi rakenteet
-
+.
     Aleksi Ropo (työtunnit: 38h)
         - Kentän piirtäminen ja Wall class 
         - Törmäyksen tunnistus 
@@ -26,3 +26,7 @@ Loppufiilikset:
     Taija   
         - Vaativinta oli hahmon liikkuvuuden tekeminen ja se tulee vieläkin viiveellä. Tälle en saanut nopeampaa reagointia vaikka se olisi ollut EHKÄ mahdollista SetIntervallin kautta. 
         - Classien käyttö oli uutta jossa Aleksi auttoi oppimaan.  
+. 
+    Aleksi
+        -Classeihin tarkempi tutustuminen toi uutta näkökulmaa ohjelmiston lokeroimiseen, joskin sen mukana tuli uusia haasteita this.objektin ja ulkoisten funktion käytön aiheuttamassa referenssin katkeamisessa.
+        -Git versionhallinta aiheutti huomattavaa päänvaivaa
