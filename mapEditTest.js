@@ -63,22 +63,27 @@ class BananaFruit {
 			this.width,
 			this.height
 		);
-		console.log(map);
+	//	console.log(map);
 	}
 	catch() {
 		// map[this.position.y][this.position.x] = ' ';
 
 		this.position.y = Math.floor(Math.random() * (21 - 1 + 1) + 1);
 		this.position.x = Math.floor(Math.random() * (20 - 1 + 1) + 1);
+		console.log(this.position.y +" Tämä on position y red")
+		console.log(this.position.x +" Tämä on position x red")
 
 		// reroll kunnes tyhjä kohta
 		while (map[this.position.y][this.position.x] != ' ') {
 			this.position.y = Math.floor(Math.random() * (24 - 1 + 1) + 1);
+			console.log(this.position.y +" Tämä on position y red Mathilla")
 			this.position.x = Math.floor(Math.random() * (20 - 1 + 1) + 1);
+			console.log(this.position.x +" Tämä on position x red Mathilla")
 			// console.log('pass');
 			// console.log(this.position.x, this.position.y);
 		}
 		// map[this.position.x][this.position.y] = 'B';
+		console.log(" ")
 		this.draw();
 	}
 }
@@ -97,18 +102,21 @@ class LemonFruit {
 			this.width,
 			this.height
 		);
-		console.log(map);
+//		console.log(map);
 	}
 	throw() {
 		// map[this.position.y][this.position.x] = ' ';
-
 		this.position.y = Math.floor(Math.random() * (21 - 1 + 1) + 1);
 		this.position.x = Math.floor(Math.random() * (20 - 1 + 1) + 1);
+		console.log(this.position.y +" Tämä on position y orange")
+		console.log(this.position.x +" Tämä on position x orange")
 
 		// reroll kunnes tyhjä kohta
 		while (map[this.position.y][this.position.x] != ' ') {
 			this.position.y = Math.floor(Math.random() * (24 - 1 + 1) + 1);
+			console.log(this.position.y +" Tämä on position y orange Mathilla")
 			this.position.x = Math.floor(Math.random() * (20 - 1 + 1) + 1);
+			console.log(this.position.x +" Tämä on position x orange Mathilla")
 			// console.log('pass');
 			// console.log(this.position.x, this.position.y);
 		}
@@ -195,4 +203,4 @@ lemon.draw();
 banana.catch();
 lemon.throw();
 
-console.log(fruits);
+// console.log(fruits);

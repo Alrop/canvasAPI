@@ -1,6 +1,6 @@
 /** @format */
-//	document.getElementById("bgMusic").play();
-const canvas = document.getElementById('gameBoard');
+document.getElementById("bgMusic").play();
+const canvas = document.getElementById('gameboard');
 const ctx = canvas.getContext('2d');
 // HERO MOVEMENT
 let currentIMG = ""
@@ -62,6 +62,21 @@ const map = [
 ];
 const level = [];
 
+// MUTE OR NOT
+function checkMute() {
+    if (document.getElementById("bgMusic").muted === true){
+        	document.getElementById("bgMusic").muted = false
+        	document.getElementById("bananaCaught").muted = false
+			document.getElementById("lemonCaught").muted = false
+        	document.getElementById("mute").src = 'photos/sound_on.png'
+    }
+    else {
+        document.getElementById("bgMusic").muted = true
+		document.getElementById("bananaCaught").muted = true
+		document.getElementById("lemonCaught").muted = true
+        document.getElementById("mute").src = 'photos/sound_off.png'
+}};
+
 class Wall {
 	constructor({ position }) {
 		this.position = position;
@@ -122,36 +137,36 @@ class Hero {
 */
 }
 class BananaFruit {
-	constructor(width, height) {
-		this.width = width;
-		this.height = height;
+	constructor(x, y) {
+		this.x = x;
+		this.y = y;
 		// Banaanin koon määrittely || Normikoko 50x50
-		this.y = 50;
-		this.x = 50;
+		this.height = 50;
+		this.width = 50;
 	}
 	draw() {
-		ctx.drawImage(bananaImage, this.width, this.height);
+		ctx.drawImage(bananaImage, this.x, this.y);
 	}
 	caught() {
-		this.width = Math.round(2 + Math.random() * (canvas.width - 64));
-		this.height = Math.round(32 + Math.random() * (canvas.height - 64));
+		this.x = Math.round(2 + Math.random() * (canvas.width - 64));
+		this.y = Math.round(32 + Math.random() * (canvas.height - 64));
 		this.draw();
 	}
 }
 class LemonFruit {
 	constructor() {
-		this.width = Math.round(2 + Math.random() * (canvas.width - 64));
-		this.height = Math.round(32 + Math.random() * (canvas.height - 64));
+		this.x = Math.round(2 + Math.random() * (canvas.width - 64));
+		this.y = Math.round(32 + Math.random() * (canvas.height - 64));
 		// Situunan koon määrittely || Normikoko 50x50
-		this.y = 50;
-		this.x = 50;
+		this.height = 50;
+		this.width = 50;
 	}
 	draw() {
-		ctx.drawImage(lemonImage, this.width, this.height, this.x, this.y);
+		ctx.drawImage(lemonImage, this.x, this.y, this.width, this.height);
 	}
 	throw() {
-		this.width = Math.round(2 + Math.random() * (canvas.width - 64));
-		this.height = Math.round(32 + Math.random() * (canvas.height - 64));
+		this.x = Math.round(2 + Math.random() * (canvas.width - 64));
+		this.y = Math.round(32 + Math.random() * (canvas.height - 64));
 		this.draw();
 	}
 }
@@ -176,17 +191,18 @@ function collisionDetectionA({ unit, object }) {
 	);
 }
 // Vaihtoehtoinen törmäys laskin
+// unit = hero	Object = Lemon // Banaana
 function collisionDetectionB({ unit, object }) {
 	return (
 		// Neliön törmäys moottori
 		// Ylä seinä
-		unit.height + unit.speedY <= object.height + object.y &&
+		unit.y + unit.speedY <= object.y + object.height &&
 		// Ala seinä
-		unit.height + unit.y + unit.speedY >= object.height &&
+		unit.y + unit.height + unit.speedY >= object.y &&
 		// Oikea seinä
-		unit.width + unit.x + unit.speedX >= object.width &&
+		unit.x + unit.width + unit.speedX >= object.x &&
 		// Vasen seinä
-		unit.width + unit.speedX <= object.width + object.x
+		unit.x + unit.speedX <= object.x + object.width
 	);
 }
 // TÖRMÄYS LASKINTEN LOPPU
@@ -198,25 +214,34 @@ function animate() {
 	// Puhdista vanha ruutu ennen uuden piirtämistä
 	ctx.clearRect(0, 0, canvas.width, canvas.height);
 	character.draw();
+
+	// Piiretään alussa banaanit ja sitruunat ja sit tsekataan sijainnit
+	banana.draw();
+	lemons.forEach((lemon) => {
+		lemon.draw();
+	});
+
 	// Piirrä level.arrayn koordinaatit käyttäen Wall classin draw()
 	level.forEach((square) => {
 		square.draw();
-		// Tätä ei tarvitse täällä koska muuten apinan animaatio kuseee || Voipi poistaa jos ok Aleksille
-		/*
-		// Jos minkään seinän collisionDetectionA palauttaa True, pysäytä hahmo
-		if (
-			collisionDetectionA({
-				unit: character,
-				object: square,
-			})
-		) {
-			console.log('Collision detected');
-			character.speedX = 0;
-			character.speedY = 0;
-		}
-		*/
 	});
-	banana.draw();
+
+// Tähän mennessä on heitetty paikalleen pelikenttä (seinät, Hero, Hetelmät ja banaani)
+// Tässä pitäisi erikseen katsoa osuuko joku niistä sitten seinään
+	level.forEach((square) => {
+	// Tsekataan banaanin spawnaus seinään
+		if ( collisionDetectionA({ unit: banana, object: square, })) {
+			console.log('Banaana törmäsi seinään');
+			banana.draw();
+		}
+	// Tsekataan sitruunan spawnaus seinään
+		lemons.forEach((lemon) => {
+			if (collisionDetectionA({unit: lemon, object: square, })) {
+				console.log('Saatanan paha hetelmä törmäsi seinään');
+				lemon.draw();
+		}})
+	});
+//	banana.draw();
 	// Banaani napataan
 	if (
 		collisionDetectionB({
