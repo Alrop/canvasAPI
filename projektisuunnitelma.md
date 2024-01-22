@@ -1,7 +1,16 @@
 #658 JS Canvas API 
 
 Tekijät: 
-    Taija Mitronen, Aleksi Ropo
+    Taija Mitronen (työtunnit: 26h)
+        - Graafisten elementtien toteutus 
+        - Hahmon liikuttaminen ja animointi 
+        - HTML/CSS tyylitys 
+        - Komponenttien classi rakenteet
+
+    Aleksi Ropo (työtunnit: 38h)
+        - Kentän piirtäminen ja Wall class 
+        - Törmäyksen tunnistus 
+        - Animation loopin rakenne 
 
 Pelin idea:
     Tehdään sovellettu PacMan peli. Apina kerää banaaneita
@@ -13,3 +22,8 @@ Suunnitelma:
     Peliareenan alustava koko on 800px * 400px.
     Banaani on staattinen elementti kuten myös sitruunat. Sitruunoita heitellään kentälle max. 5 kpl kerralla.
     Molemmat hedelmät heitetään peliareenalle Math.Randomin avulla
+
+Loppufiilikset:
+    Taija   
+        - Vaativinta oli hahmon liikkuvuuden tekeminen ja se tulee vieläkin viiveellä. Tälle en saanut nopeampaa reagointia vaikka se olisi ollut EHKÄ mahdollista SetIntervallin kautta. 
+        - Classien käyttö oli uutta jossa Aleksi auttoi oppimaan.  
