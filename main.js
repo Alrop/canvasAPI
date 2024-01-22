@@ -1,5 +1,5 @@
 /** @format */
-document.getElementById("bgMusic").play();
+document.getElementById('bgMusic').play();
 const canvas = document.getElementById('gameboard');
 const ctx = canvas.getContext('2d');
 // HERO MOVEMENT
@@ -64,18 +64,18 @@ const level = [];
 
 // MUTE OR NOT
 function checkMute() {
-    if (document.getElementById("bgMusic").muted === true){
-        	document.getElementById("bgMusic").muted = false
-        	document.getElementById("bananaCaught").muted = false
-			document.getElementById("lemonCaught").muted = false
-        	document.getElementById("mute").src = 'photos/sound_on.png'
-    }
-    else {
-        document.getElementById("bgMusic").muted = true
-		document.getElementById("bananaCaught").muted = true
-		document.getElementById("lemonCaught").muted = true
-        document.getElementById("mute").src = 'photos/sound_off.png'
-}};
+	if (document.getElementById('bgMusic').muted === true) {
+		document.getElementById('bgMusic').muted = false;
+		document.getElementById('bananaCaught').muted = false;
+		document.getElementById('lemonCaught').muted = false;
+		document.getElementById('mute').src = 'photos/sound_on.png';
+	} else {
+		document.getElementById('bgMusic').muted = true;
+		document.getElementById('bananaCaught').muted = true;
+		document.getElementById('lemonCaught').muted = true;
+		document.getElementById('mute').src = 'photos/sound_off.png';
+	}
+}
 
 class Wall {
 	constructor(x, y) {
@@ -131,6 +131,7 @@ class BananaFruit {
 		this.y = Math.round(32 + Math.random() * (canvas.height - 64));
 	}
 }
+
 class LemonFruit {
 	constructor() {
 		this.x = Math.round(2 + Math.random() * (canvas.width - 64));
@@ -170,7 +171,7 @@ function collisionDetectionA({ unit, object }) {
 }
 // Vaihtoehtoinen törmäys laskin
 // unit = hero	Object = Lemon // Banaana
-function collisionDetectionB({ unit, object }) {
+function collisionDetectionB(unit, object) {
 	return (
 		// Neliön törmäys moottori
 		// Ylä seinä
@@ -209,12 +210,11 @@ function animate() {
 			while (
 				collisionDetectionB(banana, square) ||
 				collisionDetectionB(banana, character)
-			) {
-				banana.caught();
-			}
+			) {}
 		} else {
 			banana.draw();
 		}
+
 		// Tarkistetaan osuuko minkään sitruunan uusi paikka seinään, pelaajaan, tai banaaniin. Jos kyllä niin lottoa uusi paikka, muuten piirrä
 		lemons.forEach((lemon) => {
 			if (collisionDetectionB(lemon, square)) {
@@ -228,7 +228,22 @@ function animate() {
 			} else {
 				lemon.draw();
 			}
+			// Banaani napataan
 
+			if (
+				collisionDetectionA({
+					unit: character,
+					object: banana,
+				})
+			) {
+				console.log('Banaani karvaisessa kätösessä');
+				document.getElementById('bananaCaught').play();
+				banana.caught();
+				// lottoa uudet sitruunan paikat
+				lemons.forEach((lemon) => {
+					lemon.throw();
+				});
+			}
 			//Sitruuna napataan
 			if (
 				collisionDetectionA({
@@ -250,26 +265,6 @@ function animate() {
 			}
 		});
 	});
-
-	// Banaani napataan
-	if (
-		collisionDetectionA({
-			unit: character,
-			object: banana,
-		})
-	) {
-		console.log('Banaani karvaisessa kätösessä');
-		document.getElementById('bananaCaught').play();
-		banana.caught();
-		// lottoa uudet sitruunan paikat
-		lemons.forEach((lemon) => {
-			lemon.throw();
-		});
-	}
-	// Piirrä sitruunat
-	// lemons.forEach((lemon) => {
-
-	// });
 }
 // ANIMATE LOOP LOPPU
 
