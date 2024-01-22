@@ -1,7 +1,7 @@
 #658 JS Canvas API 
 
 Tekijät: 
-    Taija Mitronen (työtunnit: 26h)
+    Taija Mitronen (työtunnit: 27h)
         - Graafisten elementtien toteutus 
         - Hahmon liikuttaminen ja animointi 
         - HTML/CSS tyylitys 
@@ -16,7 +16,6 @@ Pelin idea:
     Tehdään sovellettu PacMan peli. Apina kerää banaaneita
     Apinan on tarkoitus hakea banaani syötäväksi satunnaisesta paikasta pelikenttältä. Kun banaani on haettu ja syöty, ilmestyy uusi banaani peliareenalle satunnaiseen paikkaan. 
     Peliin ilmestyy sitruunoita aina uuden banaanin ilmestyttyä. Mikäli apina syö tällaisen, peli loppuu
-    Mikäli osaaminen/aika riittää, tehdään pelikentälle myös Botti joka ilmestyy tietyn väliajoin, kestää tietyn ajan ja likkuu tietyn liikkeen.
 
 Suunnitelma:
     Peliareenan alustava koko on 800px * 400px.
